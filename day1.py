@@ -26,7 +26,8 @@ def part1(lst: list) -> int:
 
 def part2(lst: list) -> int:
     """Return the total sum of the sum of the three largest sublists"""
-    return sum(sorted((sum(el) for el in lst), reverse=True)[:3])
+    largest_three = sorted((sum(el) for el in lst))[-3:]
+    return sum(largest_three)
 
 
 def main():
