@@ -41,6 +41,8 @@ def part1(inp):
 
 def part2(inp):
 
+    raise Exception("Part 2 does not work :(")
+
     total_score = 0
     for round in inp:
         computer, strategy = round.split(" ")
@@ -61,8 +63,6 @@ def part2(inp):
 
 
 def main():
-
-    raise Exception("Does not work :(")
 
     with open("inputs/day2.txt") as f:
         inp = f.read().splitlines()
