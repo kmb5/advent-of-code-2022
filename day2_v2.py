@@ -28,6 +28,29 @@ def numericise(play: str) -> int:
     return nums[play]
 
 
+def test():
+    tst = {
+        (-1, -1): "draw",
+        (-1, 0): "win",
+        (-1, 1): "lose",
+        (0, -1): "lose",
+        (0, 0): "draw",
+        (0, 1): "win",
+        (1, -1): "win",
+        (1, 0): "lose",
+        (1, 1): "draw",
+    }
+
+    for t in tst:
+        x, y = t
+        print(x - y + 4 * x * y, tst[t])
+
+
+def numeric(p1, p2):
+    if p1 == p2:
+        return "draw"
+
+
 def part1(inp):
 
     total_score = 0
@@ -41,7 +64,7 @@ def part1(inp):
 
 def part2(inp):
 
-    raise Exception("Part 2 does not work :(")
+    # raise Exception("Part 2 does not work :(")
 
     total_score = 0
     for round in inp:
@@ -75,4 +98,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    test()
