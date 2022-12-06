@@ -1,5 +1,3 @@
-from collections import Counter
-
 TEST_STR = "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"
 
 
@@ -16,7 +14,7 @@ def first_n_distinct_chars(strng: str, n: int):
     for i in range(n, len(strng)):
         chars = strng[i - n : i]
 
-        if len(Counter(chars)) == n:
+        if len(set(chars)) == n:
             return i
 
 
