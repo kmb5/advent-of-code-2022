@@ -1,5 +1,6 @@
-TEST_STR = "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"
 from collections import Counter
+
+TEST_STR = "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"
 
 
 def main():
