@@ -1,5 +1,7 @@
 from collections import defaultdict
 import re
+import os
+from time import sleep
 
 
 def parse_input(inp: str) -> tuple:
@@ -65,8 +67,13 @@ def p1(inp: str) -> str:
     crates, instructions = parse_input(inp)
 
     for instruction in instructions:
+        os.system("clear")
+        visualise_crates(crates)
+        sleep(0.03)
         handle_instruction(instruction=instruction, crates=crates, reverse=False)
 
+    os.system("clear")
+    visualise_crates(crates)
     return assemble_message(crates)
 
 
@@ -79,13 +86,32 @@ def p2(inp: str) -> str:
     return assemble_message(crates)
 
 
+def visualise_crates(crates: dict[list]):
+
+    crates = dict(crates)
+    # print(crates)
+
+    for i in range(0, 11):
+        for j in range(0, 11):
+            try:
+                if 11 - i < 0:
+                    raise IndexError
+                chr = f"[{crates[j][11 - i]}]"
+            except (KeyError, IndexError):
+                chr = "   "
+            print(chr, end=" ")
+        print()
+
+    print(" " + ("   ".join([str(i) for i in range(0, 10)])))
+
+
 def main() -> None:
 
     with open("inputs/day5.txt") as f:
         inp = f.read()
 
     print(f"Part 1: {p1(inp)}")
-    print(f"Part 2: {p2(inp)}")
+    # print(f"Part 2: {p2(inp)}")
 
 
 if __name__ == "__main__":
