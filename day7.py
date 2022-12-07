@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from pprint import pprint
+from uuid import uuid4
 
 TEST_STR = """$ cd /
 $ ls
@@ -33,7 +33,6 @@ class Dir:
     name: str
     parent: Dir
     children: list[Dir | File]
-    size: int
 
 
 @dataclass
@@ -47,28 +46,36 @@ def main():
     with open("inputs/day7.txt") as f:
         s = f.read()
 
-    commands = parse_commands(TEST_STR)
+    commands = parse_commands(s)
+    all_dirs = make_dir_structure(commands)
 
-    dirs = make_dir_structure(commands)
-
-    p1_sol = p1(dirs)
-    print(f"Part 1: {p1_sol}")
+    print(f"Part 1: {p1(all_dirs)}")
+    print(f"Part 2: {p2(all_dirs)}")
 
 
 def parse_commands(s: str) -> list[str]:
     return [x.split("\n") for x in s.split("$ ") if x != ""]
 
 
-def p1(dirs: dict[str, Dir]):
-    total_sum = 0
-    for dirname in dirs:
-        dir = dirs[dirname]
+def p1(dirs: list[Dir]):
+    total_size = 0
+    for dir in dirs:
         size = get_total_size(dir)
-        print(dirname, size)
         if size <= 100000:
-            total_sum += size
+            total_size += size
 
-    return total_sum
+    return total_size
+
+
+def p2(dirs: list[Dir]):
+    available_size = 70000000 - get_total_size(dirs[0])
+    min_req_size = 30000000 - available_size
+    all_applicable = []
+    for dir in dirs:
+        size = get_total_size(dir)
+        if size >= min_req_size:
+            all_applicable.append(size)
+    return min(all_applicable)
 
 
 def get_total_size(obj: Dir | File) -> int:
@@ -78,38 +85,43 @@ def get_total_size(obj: Dir | File) -> int:
         return sum(get_total_size(c) for c in obj.children)
 
 
-def make_dir_structure(commands: list[str]) -> dict[str, Dir]:
+def make_dir_structure(commands: list[str]) -> list[Dir]:
 
-    dirs = {"/": Dir("/", None, [])}
-    curr_dir = dirs["/"]
+    curr_dir = Dir("/", None, [])
+    all_dirs = [curr_dir]
 
     for command in commands[1:]:
         cmd, result = command[0], [c for c in command[1:] if c != ""]
 
         if cmd.startswith("cd"):
-            curr_dir = cd(cmd, curr_dir, dirs)
+            curr_dir = cd(cmd, curr_dir) or all_dirs[0]
         elif cmd.startswith("ls"):
-            ls(curr_dir, result, dirs)
+            ls(curr_dir, result, all_dirs)
 
-    return dirs
+    return all_dirs
 
 
-def cd(cmd, curr_dir: Dir, dirs: dict[str, Dir]) -> Dir:
+def cd(cmd, curr_dir: Dir) -> Dir:
     name = cmd.split(" ")[1]
-    print(name)
     if name != "..":
-        return dirs[name]
+        return _find_d(curr_dir.children, name)
     if curr_dir.parent is not None:
         return curr_dir.parent
-    return dirs["/"]
+    return None
 
 
-def ls(curr_dir: Dir, objects: list[str], dirs: dict[str, Dir]):
+def _find_d(lst: list[Dir], name: str) -> Dir:
+    for d in lst:
+        if d.name == name:
+            return d
+
+
+def ls(curr_dir: Dir, objects: list[str], all_dirs: list[Dir]):
     for obj in objects:
         size, name = obj.split(" ")
         if size == "dir":
             d = Dir(name, curr_dir, [])
-            dirs[name] = d
+            all_dirs.append(d)
             curr_dir.children.append(d)
         else:
             f = File(name, int(size))
