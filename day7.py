@@ -1,6 +1,5 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from uuid import uuid4
 
 TEST_STR = """$ cd /
 $ ls
