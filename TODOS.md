@@ -1,0 +1,2 @@
+- make some kind of 2d viewer which can take in multiple coords and display on a grid
+- also could move them and display the difference
